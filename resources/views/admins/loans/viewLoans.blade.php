@@ -8,11 +8,26 @@
 </style>
 
 <div class="p-6 bg-white rounded shadow" x-data="{ open: false, selectedLoan: null }">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold">Data Peminjaman</h2>
-        <a href="{{ route('loansAdmin.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+    <div class="mb-4">
+    <h2 class="text-2xl font-bold mb-3">Data Peminjaman</h2>
+
+        <div class="flex justify-between items-center space-x-4">
+            <!-- Tombol Tambah di kiri -->
+            <a href="{{ route('loansAdmin.create') }}" 
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded whitespace-nowrap">
             + Tambah Peminjaman
-        </a>
+            </a>
+
+            <!-- Search Bar di kanan -->
+            <form method="GET" action="{{ route('loansAdmin.index') }}" class="flex space-x-2">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID / Nama User..." 
+                    class="border p-2 rounded" />
+            <button type="submit" 
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded whitespace-nowrap">
+                Cari
+            </button>
+            </form>
+        </div>
     </div>
 
     @if(session('success'))
@@ -34,7 +49,7 @@
             <tbody>
                 @forelse ($loans as $loan)
                     <tr class="border-t border-gray-300">
-                        <td class="p-3 border border-gray-300">{{ $loop->iteration }}</td>
+                        <td class="p-3 border border-gray-300">{{ $loop->iteration + ($loans->currentPage() - 1) * $loans->perPage() }}</td>
                         <td class="p-3 border border-gray-300">{{ $loan->id_peminjaman }}</td>
                         <td class="p-3 border border-gray-300">{{ $loan->user->nama_user ?? '-' }}</td>
                         <td class="p-3 border border-gray-300">{{ $loan->tanggal_pinjam }}</td>
@@ -43,30 +58,30 @@
                             <div class="flex items-center justify-center gap-2">
                                 <!-- Tombol Detail -->
                                 <button
-                                type="button"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
-                                @click="open = true; selectedLoan = {{ json_encode($loan) }}"
+                                    type="button"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
+                                    @click="open = true; selectedLoan = {{ json_encode($loan) }}"
                                 >
-                                Detail
+                                    Detail
                                 </button>
 
                                 <!-- Form Return -->
                                 <form
-                                action=""
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin mengembalikan peminjaman ini?')"
-                                class="m-0"
-                                style="display: inline-flex;"
+                                    action=""
+                                    method="POST"
+                                    onsubmit="return confirm('Yakin ingin mengembalikan peminjaman ini?')"
+                                    class="m-0"
+                                    style="display: inline-flex;"
                                 >
-                                @csrf
-                                @method('PUT')
-                                <button
-                                    type="submit"
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
-                                    style="margin:0;"
-                                >
-                                    Return
-                                </button>
+                                    @csrf
+                                    @method('PUT')
+                                    <button
+                                        type="submit"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
+                                        style="margin:0;"
+                                    >
+                                        Return
+                                    </button>
                                 </form>
                             </div>
                         </td>

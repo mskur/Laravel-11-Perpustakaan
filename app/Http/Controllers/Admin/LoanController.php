@@ -15,9 +15,24 @@ use App\Models\Auth\AdminLogin;
 
 class LoanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $loans = Loan::with('user', 'admin', 'details.book')->latest()->paginate(10);
+        $query = Loan::with('user', 'admin', 'details.book')->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $keyword = $request->search;
+
+            $query->where(function($q) use ($keyword) {
+                $q->where('id_peminjaman', 'like', '%' . $keyword . '%')
+                  ->orWhereHas('user', function ($qUser) use ($keyword) {
+                      $qUser->where('nama_user', 'like', '%' . $keyword . '%');
+                  });
+            });
+        }
+
+        $loans = $query->paginate(4); // <- Ubah ke 10 kalau sudah
+        $loans->appends(['search' => $request->search]);
+
         return view('admins.loans.viewLoans', compact('loans'));
     }
 
