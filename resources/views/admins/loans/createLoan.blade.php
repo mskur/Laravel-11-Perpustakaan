@@ -22,7 +22,6 @@
     <form action="{{ route('loansAdmin.store') }}" method="POST" id="loanForm">
         @csrf
 
-        <!-- ID Admin (hidden) -->
         <input type="hidden" name="id_admin" value="{{ auth()->guard('admin')->user()->id_admin }}">
 
         <!-- ID User -->
@@ -30,44 +29,37 @@
             <label class="block mb-1">ID User</label>
             <input type="text" name="id_user" id="id_user" class="w-full border p-2 rounded" required>
             @error('id_user')
-                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">
-                    {{ $message }}
-                </div>
+                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">{{ $message }}</div>
             @enderror
         </div>
 
         <!-- Tanggal Pinjam -->
         <div class="mb-4">
             <label class="block mb-1">Tanggal Pinjam</label>
-            <input type="date" name="tanggal_pinjam" id="tanggal_pinjam" class="w-full border p-2 rounded" required>
+            <input type="date" name="tanggal_pinjam" id="tanggal_pinjam" class="w-full border p-2 rounded" min="{{ date('Y-m-d') }}" required>
             @error('tanggal_pinjam')
-                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">
-                    {{ $message }}
-                </div>
+                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">{{ $message }}</div>
             @enderror
         </div>
 
-        <!-- Tanggal Kembali (readonly) -->
+        <!-- Tanggal Kembali -->
         <div class="mb-4">
             <label class="block mb-1">Tanggal Kembali</label>
             <input type="date" name="tanggal_kembali" id="tanggal_kembali" class="w-full border p-2 rounded bg-gray-100" readonly required>
             @error('tanggal_kembali')
-                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">
-                    {{ $message }}
-                </div>
+                <div class="text-red-500 bg-red-100 border border-red-400 rounded-md p-2 mt-2">{{ $message }}</div>
             @enderror
         </div>
 
         <!-- Buku -->
         <div class="mb-4">
-            <label class="block mb-1">Pilih Buku</label>
+            <label class="block mb-1">Cari Buku</label>
             <div id="book-list">
-                <div class="flex space-x-2 mb-2">
-                    <select name="books[0][id_buku]" class="border p-2 rounded w-2/3">
-                        @foreach($books as $book)
-                            <option value="{{ $book->id_buku }}">{{ $book->judul_buku }} (Stok: {{ $book->jumlah_buku }})</option>
-                        @endforeach
-                    </select>
+                <div class="flex space-x-2 mb-2 relative">
+                    <div class="w-2/3 relative">
+                        <input type="text" class="border p-2 rounded w-full book-input" name="books[0][id_buku]" placeholder="Ketik ID atau Judul Buku..." autocomplete="off">
+                        <div class="absolute z-10 w-full bg-white border mt-1 rounded shadow hidden max-h-40 overflow-y-auto book-suggestions"></div>
+                    </div>
                     <input type="number" name="books[0][jumlah]" min="1" class="border p-2 rounded w-1/3" placeholder="Jumlah" required>
                 </div>
             </div>
@@ -82,12 +74,21 @@
 <script>
 let bookIndex = 1;
 
-// Simpan data books dalam JavaScript
-const booksOptions = `
+// Data semua buku
+const books = [
     @foreach($books as $book)
-        <option value="{{ $book->id_buku }}">{{ $book->judul_buku }} (Stok: {{ $book->jumlah_buku }})</option>
+        @if($book->jumlah_buku > 0)
+            { id: "{{ $book->id_buku }}", title: "{{ $book->judul_buku }}", stock: {{ $book->jumlah_buku }} },
+        @endif
     @endforeach
-`;
+];
+
+// Set tanggal hari ini sebagai minimal
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    const tanggalPinjam = document.getElementById('tanggal_pinjam');
+    tanggalPinjam.setAttribute('min', today);
+});
 
 // Auto generate tanggal kembali
 document.getElementById('tanggal_pinjam').addEventListener('change', function() {
@@ -101,19 +102,69 @@ document.getElementById('tanggal_pinjam').addEventListener('change', function() 
     }
 });
 
-// Tambah pilihan buku baru
+// Fungsi tambah inputan buku
 function addBook() {
     const bookList = document.getElementById('book-list');
     const newRow = document.createElement('div');
-    newRow.className = 'flex space-x-2 mb-2';
+    newRow.className = 'flex space-x-2 mb-2 relative';
     newRow.innerHTML = `
-        <select name="books[${bookIndex}][id_buku]" class="border p-2 rounded w-2/3">
-            ${booksOptions}
-        </select>
+        <div class="w-2/3 relative">
+            <input type="text" class="border p-2 rounded w-full book-input" name="books[${bookIndex}][id_buku]" placeholder="Ketik ID atau Judul Buku..." autocomplete="off">
+            <div class="absolute z-10 w-full bg-white border mt-1 rounded shadow hidden max-h-40 overflow-y-auto book-suggestions"></div>
+        </div>
         <input type="number" name="books[${bookIndex}][jumlah]" min="1" class="border p-2 rounded w-1/3" placeholder="Jumlah" required>
     `;
     bookList.appendChild(newRow);
+    attachAutocomplete(newRow.querySelector('.book-input'));
     bookIndex++;
 }
+
+// Fungsi autocomplete
+function attachAutocomplete(input) {
+    const suggestionBox = input.nextElementSibling;
+
+    input.addEventListener('input', function() {
+        const keyword = this.value.toLowerCase();
+        suggestionBox.innerHTML = '';
+
+        if (keyword.length === 0) {
+            suggestionBox.classList.add('hidden');
+            return;
+        }
+
+        const matches = books.filter(book =>
+            (book.id.toLowerCase().includes(keyword) || book.title.toLowerCase().includes(keyword))
+        ).slice(0, 5); // max 5 hasil
+
+        if (matches.length > 0) {
+            matches.forEach(book => {
+                const option = document.createElement('div');
+                option.className = 'p-2 hover:bg-gray-200 cursor-pointer';
+                option.innerHTML = `${book.id} - ${book.title} <span class="text-xs text-gray-500">(Stok: ${book.stock})</span>`;
+                option.addEventListener('click', function() {
+                    input.value = book.id;
+                    suggestionBox.classList.add('hidden');
+                });
+                suggestionBox.appendChild(option);
+            });
+            suggestionBox.classList.remove('hidden');
+        } else {
+            suggestionBox.classList.add('hidden');
+        }
+    });
+
+    input.addEventListener('blur', function() {
+        setTimeout(() => suggestionBox.classList.add('hidden'), 200);
+    });
+
+    input.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+            this.dispatchEvent(new Event('input'));
+        }
+    });
+}
+
+// Attach autocomplete ke input awal
+document.querySelectorAll('.book-input').forEach(attachAutocomplete);
 </script>
 @endsection
