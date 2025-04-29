@@ -36,4 +36,9 @@ class Loan extends Model
     {
         return $this->hasMany(LoanDetail::class, 'id_peminjaman');
     }
+
+    public function return()
+    {
+        return $this->hasOne(ReturnLoan::class, 'id_peminjaman', 'id_peminjaman');
+    }
 }

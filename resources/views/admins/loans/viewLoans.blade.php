@@ -34,6 +34,10 @@
         <div class="p-3 mb-4 bg-green-200 text-green-800 rounded">{{ session('success') }}</div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger mb-4">{{ session('error') }}</div>
+    @endif
+
     <div class="overflow-x-auto">
         <table class="w-full text-left border border-gray-300">
             <thead>
@@ -66,23 +70,33 @@
                                 </button>
 
                                 <!-- Form Return -->
-                                <form
-                                    action=""
-                                    method="POST"
-                                    onsubmit="return confirm('Yakin ingin mengembalikan peminjaman ini?')"
-                                    class="m-0"
-                                    style="display: inline-flex;"
-                                >
-                                    @csrf
-                                    @method('PUT')
-                                    <button
-                                        type="submit"
-                                        class="bg-green-600 hover:bg-green-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
-                                        style="margin:0;"
+                                @if (!$loan->return)
+                                    <form
+                                        action="{{ route('returnsAdmin.returnLoan', $loan->id_peminjaman) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Yakin ingin mengembalikan peminjaman ini?')"
+                                        class="m-0"
+                                        style="display: inline-flex;"
                                     >
-                                        Return
-                                    </button>
-                                </form>
+                                        @csrf
+                                        @method('PUT')
+                                        <button
+                                            type="submit"
+                                            class="bg-green-600 hover:bg-green-700 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center"
+                                            style="margin:0;"
+                                        >
+                                            Return
+                                        </button>
+                                    </form>
+                                @else
+                                <button
+                                    disabled
+                                    class="bg-gray-400 text-white px-4 h-10 rounded text-sm font-medium flex items-center justify-center cursor-not-allowed"
+                                >
+                                    Sudah Dikembalikan
+                                </button>
+                                @endif
+                                
                             </div>
                         </td>
                     </tr>

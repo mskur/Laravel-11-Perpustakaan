@@ -6,6 +6,7 @@ use App\Http\Controllers\UserLoginController;
 use App\Http\Controllers\Admin\BooksAdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\LoanController;
+use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersAdminController;
 
@@ -32,12 +33,19 @@ Route::prefix('admin')->group(function () {
 
         // Route::get('/adminProfile', [AdminController::class, 'adminProfile'])->name('adminProfile');
 
+        Route::prefix('returnsAdmin')->name('returnsAdmin.')->group(function () {
+            Route::get('/', [ReturnController::class, 'index'])->name('index');
+            Route::put('/return-loan/{id}', [ReturnController::class, 'returnLoan'])->name('returnLoan');
+        });
+        
+
         Route::get('/books', [BookController::class, 'index'])->name('booksAdmin.index');
 
         Route::resource('/booksAdmin', BooksAdminController::class);
         
         Route::resource('/categoryAdmin', CategoryController::class);
         Route::resource('/loansAdmin', LoanController::class);
+        Route::resource('/returnsAdmin', ReturnController::class);
     });
     // Route::resource('booksAdmin', BooksAdminController::class);
 

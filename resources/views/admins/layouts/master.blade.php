@@ -59,6 +59,12 @@
                     <span class="sidebar-text">Peminjaman</span>
                 </a>
 
+                <a href="{{ route('returnsAdmin.index') }}" 
+                class="flex items-center py-2 px-8 {{ Request::routeIs('returnsAdmin.index') ? 'bg-gray-200 text-gray-700 md:font-bold' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <i class="fas fa-swatchbook mr-2.5"></i>
+                    <span class="sidebar-text">Pengembalian</span>
+                </a>
+
                 <a href="#" class="flex items-center py-2 px-8 text-gray-600 hover:bg-gray-100">
                     <i class="fas fa-box mr-3"></i>
                     <span class="sidebar-text">Product</span>
