@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2025 at 06:00 AM
+-- Generation Time: Apr 30, 2025 at 11:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,13 +66,13 @@ CREATE TABLE `books` (
 --
 
 INSERT INTO `books` (`id_buku`, `judul_buku`, `jumlah_buku`, `id_kategori`, `barcode_buku`, `created_at`, `updated_at`) VALUES
-('BOOK0003', 'Maryam', 1, 'KTGR0004', 'barcodeBuku/BOOK0003.png', '2025-02-18 20:57:55', '2025-04-27 20:08:12'),
-('BOOK0004', 'Mahabarata', 1, 'KTGR0004', 'barcodeBuku/BOOK0004.png', '2025-02-18 21:01:18', '2025-04-27 20:08:12'),
+('BOOK0003', 'Maryam', 3, 'KTGR0004', 'barcodeBuku/BOOK0003.png', '2025-02-18 20:57:55', '2025-04-28 20:22:28'),
+('BOOK0004', 'Mahabarata', 5, 'KTGR0004', 'barcodeBuku/BOOK0004.png', '2025-02-18 21:01:18', '2025-04-28 20:22:28'),
 ('BOOK0005', 'Si Kancil', 1, 'KTGR0003', 'barcodeBuku/BOOK0005.png', '2025-02-18 21:01:29', '2025-02-18 21:01:29'),
-('BOOK0006', 'Nyali', 15, 'KTGR0005', 'barcodeBuku/BOOK0006.png', '2025-02-18 21:01:44', '2025-04-27 20:10:17'),
-('BOOK0007', 'Lorem ipsum', 1, 'KTGR0005', 'barcodeBuku/BOOK0007.png', '2025-02-18 21:46:28', '2025-04-27 20:10:17'),
-('BOOK0008', '1', 1, 'KTGR0003', 'barcodeBuku/BOOK0008.png', '2025-02-18 22:10:55', '2025-02-18 22:10:55'),
-('BOOK0009', '1', 12, 'KTGR0004', 'barcodeBuku/BOOK0009.png', '2025-02-18 22:11:05', '2025-02-18 22:11:05');
+('BOOK0006', 'Nyali', 17, 'KTGR0005', 'barcodeBuku/BOOK0006.png', '2025-02-18 21:01:44', '2025-04-28 20:22:28'),
+('BOOK0007', 'Lorem ipsum', 0, 'KTGR0005', 'barcodeBuku/BOOK0007.png', '2025-02-18 21:46:28', '2025-04-28 04:03:53'),
+('BOOK0008', '1', 0, 'KTGR0003', 'barcodeBuku/BOOK0008.png', '2025-02-18 22:10:55', '2025-04-28 04:03:53'),
+('BOOK0009', '1', 9, 'KTGR0004', 'barcodeBuku/BOOK0009.png', '2025-02-18 22:11:05', '2025-04-28 04:14:29');
 
 -- --------------------------------------------------------
 
@@ -196,7 +196,9 @@ INSERT INTO `loans` (`id_peminjaman`, `id_user`, `id_admin`, `tanggal_pinjam`, `
 ('LOAN00000001', 'USER00001', 'ADMIN0001', '2025-04-29', '2025-05-06', '2025-04-27 19:48:58', '2025-04-27 19:48:58'),
 ('LOAN00000002', 'USER00002', 'ADMIN0001', '2025-05-01', '2025-05-08', '2025-04-27 20:01:33', '2025-04-27 20:01:33'),
 ('LOAN00000003', 'USER00003', 'ADMIN0001', '2025-05-04', '2025-05-11', '2025-04-27 20:08:12', '2025-04-27 20:08:12'),
-('LOAN00000004', 'USER00005', 'ADMIN0001', '2025-05-03', '2025-05-10', '2025-04-27 20:10:17', '2025-04-27 20:10:17');
+('LOAN00000004', 'USER00005', 'ADMIN0001', '2025-05-03', '2025-05-10', '2025-04-27 20:10:17', '2025-04-27 20:10:17'),
+('LOAN00000005', 'USER00004', 'ADMIN0001', '2025-04-29', '2025-05-06', '2025-04-28 04:03:53', '2025-04-28 04:03:53'),
+('LOAN00000006', 'USER00006', 'ADMIN0001', '2025-04-28', '2025-05-05', '2025-04-28 04:14:29', '2025-04-28 04:14:29');
 
 -- --------------------------------------------------------
 
@@ -224,7 +226,11 @@ INSERT INTO `loan_details` (`id_detail_peminjaman`, `id_peminjaman`, `id_buku`, 
 ('DETAIL000000004', 'LOAN00000003', 'BOOK0004', 2, '2025-04-27 20:08:12', '2025-04-27 20:08:12'),
 ('DETAIL000000005', 'LOAN00000003', 'BOOK0006', 4, '2025-04-27 20:08:12', '2025-04-27 20:08:12'),
 ('DETAIL000000006', 'LOAN00000004', 'BOOK0006', 2, '2025-04-27 20:10:17', '2025-04-27 20:10:17'),
-('DETAIL000000007', 'LOAN00000004', 'BOOK0007', 3, '2025-04-27 20:10:17', '2025-04-27 20:10:17');
+('DETAIL000000007', 'LOAN00000004', 'BOOK0007', 3, '2025-04-27 20:10:17', '2025-04-27 20:10:17'),
+('DETAIL000000008', 'LOAN00000005', 'BOOK0007', 1, '2025-04-28 04:03:53', '2025-04-28 04:03:53'),
+('DETAIL000000009', 'LOAN00000005', 'BOOK0008', 1, '2025-04-28 04:03:53', '2025-04-28 04:03:53'),
+('DETAIL000000010', 'LOAN00000006', 'BOOK0006', 2, '2025-04-28 04:14:29', '2025-04-28 04:14:29'),
+('DETAIL000000011', 'LOAN00000006', 'BOOK0009', 3, '2025-04-28 04:14:29', '2025-04-28 04:14:29');
 
 -- --------------------------------------------------------
 
@@ -270,6 +276,15 @@ CREATE TABLE `returns` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `returns`
+--
+
+INSERT INTO `returns` (`id_pengembalian`, `id_peminjaman`, `tanggal_pengembalian`, `denda`, `created_at`, `updated_at`) VALUES
+('RET00000001', 'LOAN00000001', '2025-04-29', 0.00, '2025-04-28 20:17:23', '2025-04-28 20:17:23'),
+('RET00000002', 'LOAN00000002', '2025-04-29', 0.00, '2025-04-28 20:22:00', '2025-04-28 20:22:00'),
+('RET00000003', 'LOAN00000003', '2025-04-29', 0.00, '2025-04-28 20:22:28', '2025-04-28 20:22:28');
+
 -- --------------------------------------------------------
 
 --
@@ -284,6 +299,17 @@ CREATE TABLE `return_details` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_details`
+--
+
+INSERT INTO `return_details` (`id_detail_pengembalian`, `id_pengembalian`, `id_buku`, `jumlah`, `created_at`, `updated_at`) VALUES
+('RTDT0000000001', 'RET00000001', 'BOOK0003', 1, '2025-04-28 20:17:23', '2025-04-28 20:17:23'),
+('RTDT0000000002', 'RET00000002', 'BOOK0004', 2, '2025-04-28 20:22:00', '2025-04-28 20:22:00'),
+('RTDT0000000003', 'RET00000003', 'BOOK0003', 1, '2025-04-28 20:22:28', '2025-04-28 20:22:28'),
+('RTDT0000000004', 'RET00000003', 'BOOK0004', 2, '2025-04-28 20:22:28', '2025-04-28 20:22:28'),
+('RTDT0000000005', 'RET00000003', 'BOOK0006', 4, '2025-04-28 20:22:28', '2025-04-28 20:22:28');
 
 -- --------------------------------------------------------
 
@@ -329,7 +355,8 @@ INSERT INTO `users` (`id_user`, `foto_user`, `nama_user`, `tanggal_lahir`, `alam
 ('USER00002', 'fotoUser/USER00002.png', 'Winda Nurhasanah', '2002-03-05', 'Jalan Gresik Utara', '085463789022', '$2y$10$YkHCbazEdnLo9JA5Ds05j.gZS2GlK9dtSCtqiI3/XSaTnRVJieoyu', 'user', 'barcodeUser/USER00002.png', '2025-02-21 19:49:47', '2025-02-21 21:56:26'),
 ('USER00003', 'fotoUser/USER00003.png', 'Berlianda Khisbatul', '2003-07-22', 'Gresik Utara', '085646321123', '$2y$12$uUMZl5kWInWZz05Qk2I4Vu8mJf/dFJgMYsKEzBQNiDkBNJc.uN2WO', 'user', 'barcodeUser/USER00003.png', '2025-02-21 19:58:09', '2025-02-21 21:37:24'),
 ('USER00004', 'fotoUser/USER00004.png', '123', '2025-02-13', '123', '081554667778', '$2y$12$0yuryFaVwm1LBYQ9Ier9bOiIM73Q24vPLRV/KEi/gxRypFmyvAiiq', 'user', 'barcodeUser/USER00004.png', '2025-02-21 20:00:16', '2025-02-21 20:00:16'),
-('USER00005', 'fotoUser/USER00005.png', 'Fawziyah Ramadhani', '2025-02-01', 'Jombang', '083221876654', '$2y$12$3TnRZcf8IXAhpvhG6XdW0u/P3S8DnAVNPDVGOyU/N1F5t9dJgtyDe', 'user', 'barcodeUser/USER00005.png', '2025-02-21 20:00:52', '2025-02-21 20:00:52');
+('USER00005', 'fotoUser/USER00005.png', 'Fawziyah Ramadhani', '2025-02-01', 'Jombang', '083221876654', '$2y$12$3TnRZcf8IXAhpvhG6XdW0u/P3S8DnAVNPDVGOyU/N1F5t9dJgtyDe', 'user', 'barcodeUser/USER00005.png', '2025-02-21 20:00:52', '2025-02-21 20:00:52'),
+('USER00006', 'fotoUser/USER00006.png', 'Putri Delvie', '2002-03-06', 'Gresik Kota', '0866544336632', '$2y$12$4EdVOkyj8bCvooeKIZa9IuNHbUXeYUXsfAO5espQxWmlbbOdGHSsO', 'user', 'barcodeUser/USER00006.png', '2025-04-28 04:09:01', '2025-04-28 04:09:01');
 
 --
 -- Indexes for dumped tables
